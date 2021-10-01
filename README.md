@@ -41,7 +41,7 @@ With a simple but powerful caching algorithm, you can get subsequent objects muc
 
 ## Tests
 
-`cd` to this directory and run `g++ -std=c++14 extras/test/tests.cpp -o tests && ./tests`
+`cd extras/test` to this directory and run `g++ -std=c++14 extras/test/tests.cpp -o tests && ./tests`
 
 -------------------------
 
@@ -98,12 +98,17 @@ myList.unshift(myObject);
 
 // Get the FIRST element
 myObject = myList.get(0);
+or
+myObject = myList.head();
+
 
 // Get the third element
 myObject = myList.get(2);
 
 // Get the LAST element
 myObject = myList.get(myList.size() - 1);
+or
+myObject = myList.tail();
 ```
 
 #### Changing elements
