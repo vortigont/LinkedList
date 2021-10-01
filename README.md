@@ -1,5 +1,26 @@
 # LinkedList
 
+This is a fork of [ivanseidel's LinkedList](https://github.com/ivanseidel/LinkedList/issues) lib.
+I needed some features for my projects but it looks like upstream is not suported much recently. So I decided to make some improvements and merge fixes on my owm. At least till [ivanseidel's](https://github.com/ivanseidel/LinkedList) PRs are pending.
+
+
+### Changes compared to origin
+
+ - STL-like forward Iterators [added](https://github.com/ivanseidel/LinkedList/pull/55)
+
+ - Cache node [improvement](https://github.com/ivanseidel/LinkedList/pull/56)
+
+ - added head()/tail()/exist() helpers to make user code simple on Node access/checks
+
+ - added [wrapper namespace](https://github.com/ivanseidel/LinkedList/pull/51) to workaround Async Webserver Class name collision
+
+ - updated [library.json](library.json) for [PlatformIO](https://platformio.org/) capability
+
+ - merged [ivanseidel/LinkedList#48](https://github.com/ivanseidel/LinkedList/pull/48) (moved test.cpp into subdir)
+
+
+===============================
+
 This library was developed targeting **`Arduino`** applications. However, works just great with any C++.
 
 Implementing a buffer for objects takes time. If we are not in the mood, we just create an `array[1000]` with enough size.
