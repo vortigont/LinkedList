@@ -6,6 +6,8 @@ I needed some features for my projects but it looks like upstream is not suporte
 
 ### Changes compared to origin
 
+ - getters methods are const-aware correct
+
  - STL-like forward Iterators [added](https://github.com/ivanseidel/LinkedList/pull/55)
 
  - Cache node [improvement](https://github.com/ivanseidel/LinkedList/pull/56)

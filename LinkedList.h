@@ -35,10 +35,10 @@ protected:
 	ListNode<T>	*last;
 
 	// Helps "get" method, by saving last position
-	ListNode<T> *lastNodeGot = nullptr;
-	int lastIndexGot=0;		// cached node index
+	mutable ListNode<T> *lastNodeGot = nullptr;
+	mutable int lastIndexGot=0;		// cached node index
 
-	ListNode<T>* getNode(int index);
+	ListNode<T>* getNode(int index) const;
 
 	ListNode<T>* findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &, T &));
 
@@ -85,27 +85,27 @@ public:
 		Remove first object;
 	*/
 	virtual T shift();
+
 	/*
 		Get the index'th element on the list;
 		Return Element if accessible,
 		else, return false;
 	*/
-	virtual T get(int index);
+	virtual T get(int index) const;
 
 	/*
 		Get first element of the list;
 		Return Element if accessible,
 		else, return false;
 	*/
-	virtual T head();
+	virtual T head() const;
 
 	/*
 		Get last element of the list;
 		Return Element if accessible,
 		else, return false;
 	*/
-	virtual T tail();
-
+	virtual T tail() const;
 
 	/*
 		Return true if element with specified index exist
@@ -124,8 +124,8 @@ public:
 	virtual void sort(int (*cmp)(T &, T &));
 
 
-		// add support to array brakets [] operator
-	inline T& operator[](int index); 
+	// add support to array brakets [] operator
+	inline T& operator[](int index);
 	inline T& operator[](size_t& i) { return this->get(i); }
   	inline const T& operator[](const size_t& i) const { return this->get(i); }
 
@@ -149,7 +149,7 @@ public:
 		ConstIterator& operator++() { m_ptr=m_ptr->next; return *this; }
 
 		// Postfix increment
-		ConstIterator operator++(int) { Iterator tmp = *this; m_ptr=m_ptr->next; return tmp; }
+		ConstIterator operator++(int) { ConstIterator tmp = *this; m_ptr=m_ptr->next; return tmp; }
 
 		bool operator== (const ConstIterator& a) const { return m_ptr == a.m_ptr; };
 		bool operator!= (const ConstIterator& a) const { return m_ptr != a.m_ptr; };
@@ -215,15 +215,14 @@ LinkedList<T>::~LinkedList()
 /*
 	Actualy "logic" coding
 */
-
 template<typename T>
-ListNode<T>* LinkedList<T>::getNode(int index){
+ListNode<T>* LinkedList<T>::getNode(int index) const {
 
 	int _pos = 0;
 	ListNode<T>* current = root;
 
 	// Check if the node trying to get is
-	// immediatly AFTER the previous got one
+	// ahead or equal to the last one got
 	if(lastIndexGot > 0 && lastIndexGot <= index){
 		_pos = lastIndexGot;
 		current = lastNodeGot;
@@ -239,7 +238,6 @@ ListNode<T>* LinkedList<T>::getNode(int index){
 	if(_pos == index){
 		lastIndexGot = index;
 		lastNodeGot = current;
-
 		return current;
 	}
 
@@ -412,7 +410,7 @@ T LinkedList<T>::remove(int index){
 
 
 template<typename T>
-T LinkedList<T>::get(int index){
+T LinkedList<T>::get(int index) const {
 	ListNode<T> *tmp = getNode(index);
 
 	return (tmp ? tmp->data : T());
@@ -494,7 +492,7 @@ ListNode<T>* LinkedList<T>::findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &
 }
 
 template<typename T>
-T LinkedList<T>::head(){
+T LinkedList<T>::head() const {
         if(_size>0)
                 return root->data;
 
@@ -502,7 +500,7 @@ T LinkedList<T>::head(){
 }
 
 template<typename T>
-T LinkedList<T>::tail(){
+T LinkedList<T>::tail() const {
         if(_size>0)
                 return last->data;
 
