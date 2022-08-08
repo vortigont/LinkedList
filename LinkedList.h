@@ -140,16 +140,16 @@ public:
 		using pointer           = const T*;
 		using reference         = const T&;
 
-		ConstIterator(ListNode<T> *ptr = nullptr) : m_ptr(ptr) {}
+		ConstIterator(ListNode<T> *ptr = nullptr) : m_ptr(ptr) { if (m_ptr != nullptr) m_next_ptr = ptr->next; }
 
 		const reference operator*() const { return m_ptr->data; }
 		const pointer operator->() const { return &m_ptr->data; }
 
 		// Prefix increment
-		ConstIterator& operator++() { m_ptr=m_ptr->next; return *this; }
+		ConstIterator& operator++() { m_ptr = m_next_ptr; m_next_ptr = m_next_ptr ? m_next_ptr->next : nullptr; return *this; }
 
 		// Postfix increment
-		ConstIterator operator++(int) { ConstIterator tmp = *this; m_ptr=m_ptr->next; return tmp; }
+		ConstIterator operator++(int) { ConstIterator tmp = *this; m_ptr = m_next_ptr; m_next_ptr = m_next_ptr ? m_next_ptr->next : nullptr; return tmp; }
 
 		bool operator== (const ConstIterator& a) const { return m_ptr == a.m_ptr; };
 		bool operator!= (const ConstIterator& a) const { return m_ptr != a.m_ptr; };
@@ -160,6 +160,7 @@ public:
 
 		protected:
 			ListNode<T> *m_ptr;
+			ListNode<T> *m_next_ptr = nullptr;
 	};
 
 	/*
