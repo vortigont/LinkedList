@@ -23,7 +23,7 @@ struct ListNode
 	ListNode<T> *next;
 
 	ListNode<T>(ListNode<T>* _next = nullptr) : next(_next) {}
-	ListNode<T>(const T _v, ListNode<T>* _next = nullptr) : data(_v), next(_next) {}
+	ListNode<T>(const T& _v, ListNode<T>* _next = nullptr) : data(_v), next(_next) {}
 };
 
 template <typename T>
@@ -56,21 +56,21 @@ public:
 		Unlink and link the LinkedList correcly;
 		Increment _size
 	*/
-	virtual bool add(int index, T);
+	virtual bool add(int index, const T&);
 	/*
 		Adds a T object in the end of the LinkedList;
 		Increment _size;
 	*/
-	virtual bool add(T);
+	virtual bool add(const T&);
 	/*
 		Adds a T object in the start of the LinkedList;
 		Increment _size;
 	*/
-	virtual bool unshift(T);
+	virtual bool unshift(const T&);
 	/*
 		Set the object at index, with T;
 	*/
-	virtual bool set(int index, T);
+	virtual bool set(int index, const T&);
 	/*
 		Remove object at index;
 		If index is not reachable, returns false;
@@ -249,7 +249,7 @@ LinkedList<T>::LinkedList(int sizeIndex, T _t){
 }
 
 template<typename T>
-bool LinkedList<T>::add(int index, T _t){
+bool LinkedList<T>::add(int index, const T& _t){
 	if (index<0)
 		return false;
 
@@ -271,7 +271,7 @@ bool LinkedList<T>::add(int index, T _t){
 }
 
 template<typename T>
-bool LinkedList<T>::add(T _t){
+bool LinkedList<T>::add(const T& _t){
 	
 	if(root){
 		// Already have elements inserted
@@ -291,7 +291,7 @@ bool LinkedList<T>::add(T _t){
 }
 
 template<typename T>
-bool LinkedList<T>::unshift(T _t){
+bool LinkedList<T>::unshift(const T& _t){
 
 	if(_size == 0)
 		return add(_t);
@@ -313,7 +313,7 @@ T& LinkedList<T>::operator[](int index) {
 }
 
 template<typename T>
-bool LinkedList<T>::set(int index, T _t){
+bool LinkedList<T>::set(int index, const T& _t){
 	// Check if index position is in bounds
 	if(index < 0 || index >= _size)
 		return false;
