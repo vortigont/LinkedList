@@ -30,33 +30,33 @@ template <typename T>
 class LinkedList{
 
 protected:
-	int _size = 0;
+	unsigned _size = 0;
 	ListNode<T> *root = nullptr;
 	ListNode<T>	*last = nullptr;
 
 	// Helps "get" method, by saving last position
 	mutable ListNode<T> *lastNodeGot = nullptr;
-	mutable int lastIndexGot=0;		// cached node index
+	mutable unsigned lastIndexGot=0;		// cached node index
 
-	ListNode<T>* getNode(int index) const;
+	ListNode<T>* getNode(unsigned index) const;
 
 	ListNode<T>* findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &, T &));
 
 public:
 	LinkedList(){};
-	LinkedList(int sizeIndex, T _t); //initiate list size and default value
+	LinkedList(unsigned sizeIndex, T _t); //initiate list size and default value
 	virtual ~LinkedList();
 
 	/*
 		Returns current size of LinkedList
 	*/
-	virtual int size() const;
+	virtual unsigned size() const;
 	/*
 		Adds a T object in the specified index;
 		Unlink and link the LinkedList correcly;
 		Increment _size
 	*/
-	virtual bool add(int index, const T&);
+	virtual bool add(unsigned index, const T&);
 	/*
 		Adds a T object in the end of the LinkedList;
 		Increment _size;
@@ -70,7 +70,7 @@ public:
 	/*
 		Set the object at index, with T;
 	*/
-	virtual bool set(int index, const T&);
+	virtual bool set(unsigned index, const T&);
 
 	/*
 		Remove object at index;
@@ -78,7 +78,7 @@ public:
 		else, decrement _size
 		Returns a copy of T that has been removed
 	*/
-	virtual T remove(int index);
+	virtual T remove(unsigned index);
 
 	/*
 		Remove last object;
@@ -97,7 +97,7 @@ public:
 		Return Element if accessible,
 		else, return false;
 	*/
-	virtual T get(int index) const;
+	virtual T get(unsigned index) const;
 
 	/*
 		Get first element of the list;
@@ -117,7 +117,7 @@ public:
 		Return true if element with specified index exist
 		note: this works faster than (uncached) get(index)
 	*/
-	virtual bool exist(int index) const;
+	virtual bool exist(unsigned index) const;
 
 	/*
 		Clear the entire array
@@ -131,7 +131,7 @@ public:
 
 
 	// add support to array brakets [] operator
-	inline T& operator[](int index);
+	inline T& operator[](unsigned index);
 	inline T& operator[](size_t& i) { return this->get(i); }
   	inline const T& operator[](const size_t& i) const { return this->get(i); }
 
@@ -214,14 +214,14 @@ LinkedList<T>::~LinkedList()
 	Actualy "logic" coding
 */
 template<typename T>
-ListNode<T>* LinkedList<T>::getNode(int index) const {
+ListNode<T>* LinkedList<T>::getNode(unsigned index) const {
 
-	int _pos = 0;
+	unsigned _pos = 0;
 	ListNode<T>* current = root;
 
 	// Check if the node trying to get is
 	// ahead or equal to the last one got
-	if(lastIndexGot > 0 && lastIndexGot <= index){
+	if(lastIndexGot <= index){
 		_pos = lastIndexGot;
 		current = lastNodeGot;
 	}
@@ -243,26 +243,23 @@ ListNode<T>* LinkedList<T>::getNode(int index) const {
 }
 
 template<typename T>
-int LinkedList<T>::size() const {
+unsigned LinkedList<T>::size() const {
 	return _size;
 }
 
 template<typename T>
-LinkedList<T>::LinkedList(int sizeIndex, T _t){
-	for (int i = 0; i < sizeIndex; i++){
+LinkedList<T>::LinkedList(unsigned sizeIndex, T _t){
+	for (unsigned i = 0; i < sizeIndex; i++){
 		add(_t);
 	}
 }
 
 template<typename T>
-bool LinkedList<T>::add(int index, const T& _t){
-	if (index<0)
-		return false;
-
+bool LinkedList<T>::add(unsigned index, const T& _t){
 	if(index >= _size)
 		return add(_t);
 
-	if(index == 0)
+	if(!index)
 		return unshift(_t);
 
 	lastIndexGot = index;
@@ -283,7 +280,7 @@ bool LinkedList<T>::add(const T& _t){
 		// Already have elements inserted
 		last->next = new ListNode<T>(_t);
 		last = last->next;
-	}else{
+	} else {
 		// First element being inserted
 		root = new ListNode<T>(_t);
 		last = root;
@@ -299,7 +296,7 @@ bool LinkedList<T>::add(const T& _t){
 template<typename T>
 bool LinkedList<T>::unshift(const T& _t){
 
-	if(_size == 0)
+	if(!_size)
 		return add(_t);
 
 	root = new ListNode<T>(_t, root);
@@ -314,14 +311,14 @@ bool LinkedList<T>::unshift(const T& _t){
 
 
 template<typename T>
-T& LinkedList<T>::operator[](int index) {
+T& LinkedList<T>::operator[](unsigned index) {
 	return getNode(index)->data;
 }
 
 template<typename T>
-bool LinkedList<T>::set(int index, const T& _t){
+bool LinkedList<T>::set(unsigned index, const T& _t){
 	// Check if index position is in bounds
-	if(index < 0 || index >= _size)
+	if(index >= _size)
 		return false;
 
 	getNode(index)->data = _t;
@@ -330,7 +327,7 @@ bool LinkedList<T>::set(int index, const T& _t){
 
 template<typename T>
 T LinkedList<T>::pop(){
-	if(_size <= 0)
+	if(!_size)
 		return T();
 
 	if(_size > 1){
@@ -359,7 +356,7 @@ T LinkedList<T>::pop(){
 
 template<typename T>
 T LinkedList<T>::shift(){
-	if(_size <= 0)
+	if(!_size)
 		return T();
 
 	if(_size > 1){
@@ -378,8 +375,8 @@ T LinkedList<T>::shift(){
 }
 
 template<typename T>
-T LinkedList<T>::remove(int index){
-	if (index < 0 || index >= _size)
+T LinkedList<T>::remove(unsigned index){
+	if (index >= _size)
 		return T();
 
 	if(index == 0)
@@ -400,7 +397,7 @@ T LinkedList<T>::remove(int index){
 }
 
 template<typename T>
-T LinkedList<T>::get(int index) const {
+T LinkedList<T>::get(unsigned index) const {
 	ListNode<T> *tmp = getNode(index);
 
 	return (tmp ? tmp->data : T());
@@ -498,11 +495,8 @@ T LinkedList<T>::tail() const {
 }
 
 template<typename T>
-bool LinkedList<T>::exist(int index) const {
-	if (_size>0 && index >= 0 && index < _size)
-		return true;
-
-	return false;
+bool LinkedList<T>::exist(unsigned index) const {
+	return (_size && index < _size);
 }
 
 
