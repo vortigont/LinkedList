@@ -30,9 +30,9 @@ template <typename T>
 class LinkedList{
 
 protected:
-	int _size;
-	ListNode<T> *root;
-	ListNode<T>	*last;
+	int _size = 0;
+	ListNode<T> *root = nullptr;
+	ListNode<T>	*last = nullptr;
 
 	// Helps "get" method, by saving last position
 	mutable ListNode<T> *lastNodeGot = nullptr;
@@ -43,7 +43,7 @@ protected:
 	ListNode<T>* findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &, T &));
 
 public:
-	LinkedList();
+	LinkedList(){};
 	LinkedList(int sizeIndex, T _t); //initiate list size and default value
 	virtual ~LinkedList();
 
@@ -188,15 +188,6 @@ public:
 	Iterator end() { return Iterator(nullptr); }                    // same as last->next for non-empty list
 
 };
-
-// Initialize LinkedList with false values
-template<typename T>
-LinkedList<T>::LinkedList()
-{
-	root=nullptr;
-	last=nullptr;
-	_size=0;
-}
 
 // Clear Nodes and free Memory
 template<typename T>
