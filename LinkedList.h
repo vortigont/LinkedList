@@ -71,19 +71,25 @@ public:
 		Set the object at index, with T;
 	*/
 	virtual bool set(int index, const T&);
+
 	/*
 		Remove object at index;
 		If index is not reachable, returns false;
 		else, decrement _size
+		Returns a copy of T that has been removed
 	*/
 	virtual T remove(int index);
+
 	/*
 		Remove last object;
+		returns copy of removed node
 	*/
 	virtual T pop();
-	/*
-		Remove first object;
-	*/
+
+	/**
+	 * @brief 		Remove first object
+	 * returns copy of removed node
+	 */
 	virtual T shift();
 
 	/*
@@ -326,11 +332,10 @@ template<typename T>
 T LinkedList<T>::pop(){
 	if(_size <= 0)
 		return T();
-	
 
 	if(_size > 1){
 		ListNode<T> *tmp = getNode(_size - 2);
-		T ret = tmp->next->data;
+		T ret(tmp->next->data);
 		delete(tmp->next);
 		tmp->next = nullptr;
 		last = tmp;
@@ -341,7 +346,7 @@ T LinkedList<T>::pop(){
 		return ret;
 	}else{
 		// Only one element left on the list
-		T ret = root->data;
+		T ret(root->data);
 		delete(root);
 		root = nullptr;
 		last = nullptr;
@@ -359,39 +364,33 @@ T LinkedList<T>::shift(){
 
 	if(_size > 1){
 		ListNode<T> *_next = root->next;
-		T ret = root->data;
+		T ret(root->data);
 		delete(root);
 		root = _next;
 		--_size;
 		lastIndexGot = 0;
 		lastNodeGot = root;
-
 		return ret;
 	}else{
 		// Only one left, then pop()
 		return pop();
 	}
-
 }
 
 template<typename T>
 T LinkedList<T>::remove(int index){
 	if (index < 0 || index >= _size)
-	{
 		return T();
-	}
 
 	if(index == 0)
 		return shift();
 	
 	if (index == _size-1)
-	{
 		return pop();
-	}
 
 	ListNode<T> *tmp = getNode(--index);
 	ListNode<T> *toDelete = tmp->next;
-	T ret = toDelete->data;
+	T ret(toDelete->data);
 	tmp->next = tmp->next->next;
 	delete(toDelete);
 	_size--;
@@ -399,7 +398,6 @@ T LinkedList<T>::remove(int index){
 	lastNodeGot = tmp;
 	return ret;
 }
-
 
 template<typename T>
 T LinkedList<T>::get(int index) const {
@@ -485,18 +483,18 @@ ListNode<T>* LinkedList<T>::findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &
 
 template<typename T>
 T LinkedList<T>::head() const {
-        if(_size>0)
-                return root->data;
+	if(_size>0)
+			return root->data;
 
-        return T();
+	return T();
 }
 
 template<typename T>
 T LinkedList<T>::tail() const {
-        if(_size>0)
-                return last->data;
+	if(_size>0)
+			return last->data;
 
-        return T();
+	return T();
 }
 
 template<typename T>
