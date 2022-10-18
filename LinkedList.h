@@ -286,9 +286,9 @@ bool LinkedList<T>::add(const T& _t){
 		last = root;
 	}
 
-	_size++;
 	lastIndexGot = _size;
 	lastNodeGot = last;
+	++_size;
 
 	return true;
 }
