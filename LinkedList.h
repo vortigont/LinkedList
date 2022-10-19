@@ -42,6 +42,18 @@ protected:
 
 	ListNode<T>* findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &, T &));
 
+	/**
+	 * @brief delete last node in a list
+	 * @return true if success
+	 */
+	void _pop();
+
+	/**
+	 * @brief delete first node in a list
+	 * @return true if success
+	 */
+	void _shift();
+
 public:
 	LinkedList(){};
 	LinkedList(unsigned sizeIndex, T _t); //initiate list size and default value
@@ -73,22 +85,27 @@ public:
 	virtual bool set(unsigned index, const T&);
 
 	/*
-		Remove object at index;
+		Remove node at index;
 		If index is not reachable, returns false;
-		else, decrement _size
-		Returns a copy of T that has been removed
+		else, deletes node
+		Returns a copy of T object from removed node
 	*/
 	virtual T remove(unsigned index);
 
 	/*
+		Unlink and delete node at index;
+	*/
+	void unlink(unsigned index);
+
+	/*
 		Remove last object;
-		returns copy of removed node
+		Returns a copy of T object from removed node
 	*/
 	virtual T pop();
 
 	/**
 	 * @brief 		Remove first object
-	 * returns copy of removed node
+	 *	Returns a copy of T object from removed node
 	 */
 	virtual T shift();
 
@@ -195,26 +212,23 @@ public:
 
 };
 
-// Clear Nodes and free Memory
+// D-tor
 template<typename T>
-LinkedList<T>::~LinkedList()
-{
-	ListNode<T>* tmp;
-	while(root)
-	{
-		tmp=root;
-		root=root->next;
-		delete tmp;
-	}
-	last = nullptr;
-	_size=0;
-}
+LinkedList<T>::~LinkedList(){ clear(); }
 
 /*
 	Actualy "logic" coding
 */
 template<typename T>
 ListNode<T>* LinkedList<T>::getNode(unsigned index) const {
+	if (!_size || index >=_size)
+		return nullptr;
+
+	if (!index)
+		return root;
+
+	if (index == _size-1)
+		return last;
 
 	unsigned _pos = 0;
 	ListNode<T>* current = root;
@@ -228,7 +242,6 @@ ListNode<T>* LinkedList<T>::getNode(unsigned index) const {
 
 	while(_pos < index && current){
 		current = current->next;
-
 		_pos++;
 	}
 
@@ -239,7 +252,7 @@ ListNode<T>* LinkedList<T>::getNode(unsigned index) const {
 		return current;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 template<typename T>
@@ -326,6 +339,27 @@ bool LinkedList<T>::set(unsigned index, const T& _t){
 }
 
 template<typename T>
+void LinkedList<T>::_pop(){
+	if(!_size)
+		return;
+
+	if (_size == 1){
+		// Only one element left on the list
+		delete(root);
+		root = last = lastNodeGot = nullptr;
+		lastIndexGot = _size = 0;
+		return;
+	}
+
+	ListNode<T> *tmp = getNode(_size - 2);
+	delete(tmp->next);
+	tmp->next = nullptr;
+	last = lastNodeGot = tmp;
+	lastIndexGot = --_size;
+	--lastIndexGot;
+}
+
+template<typename T>
 T LinkedList<T>::pop(){
 	if(!_size)
 		return T();
@@ -333,25 +367,34 @@ T LinkedList<T>::pop(){
 	if(_size > 1){
 		ListNode<T> *tmp = getNode(_size - 2);
 		T ret(tmp->next->data);
-		delete(tmp->next);
-		tmp->next = nullptr;
-		last = tmp;
-		lastNodeGot = tmp;
-		_size--;
-		lastIndexGot = _size;
-		--lastIndexGot;
-		return ret;
-	}else{
-		// Only one element left on the list
-		T ret(root->data);
-		delete(root);
-		root = nullptr;
-		last = nullptr;
-		lastNodeGot = nullptr;
-		lastIndexGot = 0;
-		_size = 0;
+		_pop();
 		return ret;
 	}
+
+	T ret(root->data);
+	_pop();
+	return ret;
+}
+
+template<typename T>
+void LinkedList<T>::_shift(){
+	if(!_size)
+		return;
+
+	if (_size == 1){
+		// Only one element left on the list
+		delete(root);
+		root = last = lastNodeGot = nullptr;
+		lastIndexGot = _size = 0;
+		return;
+	}
+
+	// drop first node
+	ListNode<T> *_next = root->next;
+	delete(root);
+	root = lastNodeGot = _next;
+	lastIndexGot = 0;
+	--_size;	
 }
 
 template<typename T>
@@ -359,19 +402,9 @@ T LinkedList<T>::shift(){
 	if(!_size)
 		return T();
 
-	if(_size > 1){
-		ListNode<T> *_next = root->next;
-		T ret(root->data);
-		delete(root);
-		root = _next;
-		--_size;
-		lastIndexGot = 0;
-		lastNodeGot = root;
-		return ret;
-	}else{
-		// Only one left, then pop()
-		return pop();
-	}
+	T data(root->data);
+	_shift();
+	return data;
 }
 
 template<typename T>
@@ -379,21 +412,35 @@ T LinkedList<T>::remove(unsigned index){
 	if (index >= _size)
 		return T();
 
-	if(index == 0)
+	if(!index)
 		return shift();
 	
 	if (index == _size-1)
 		return pop();
 
-	ListNode<T> *tmp = getNode(--index);
-	ListNode<T> *toDelete = tmp->next;
-	T ret(toDelete->data);
-	tmp->next = tmp->next->next;
+	T ret(getNode(index)->data);
+	unlink(index);
+	return ret;
+}
+
+template<typename T>
+void LinkedList<T>::unlink(unsigned index){
+	if (!_size || index >= _size)
+		return;
+
+	if(!index)
+		return _shift();
+	
+	if (index == _size-1)
+		return _pop();
+
+	ListNode<T> *prev = getNode(--index);
+	ListNode<T> *toDelete = prev->next;
+	prev->next = prev->next->next;
 	delete(toDelete);
 	_size--;
 	lastIndexGot = index;
-	lastNodeGot = tmp;
-	return ret;
+	lastNodeGot = prev;
 }
 
 template<typename T>
@@ -405,8 +452,8 @@ T LinkedList<T>::get(unsigned index) const {
 
 template<typename T>
 void LinkedList<T>::clear(){
-	while(size() > 0)
-		shift();
+	while(_size)
+		_shift();
 }
 
 template<typename T>
@@ -480,23 +527,17 @@ ListNode<T>* LinkedList<T>::findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &
 
 template<typename T>
 T LinkedList<T>::head() const {
-	if(_size>0)
-			return root->data;
-
-	return T();
+	return _size ? root->data : T();
 }
 
 template<typename T>
 T LinkedList<T>::tail() const {
-	if(_size>0)
-			return last->data;
-
-	return T();
+	return _size ? last->data : T();
 }
 
 template<typename T>
 bool LinkedList<T>::exist(unsigned index) const {
-	return (_size && index < _size);
+	return (index < _size);
 }
 
 
