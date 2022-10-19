@@ -1,4 +1,4 @@
-//g++ -std=c++14 tests.cpp -o tests && ./tests
+//g++ -Wall -std=c++14 tests.cpp -o tests && ./tests
 
 #include "../../LinkedList.h"
 #include <assert.h> 
@@ -352,12 +352,12 @@ void GivenEmptyList_WhenConstInteratorCalled_ThenCount0Elements()
     //Arrange
     LinkedList<int> list = LinkedList<int>();
 
-    //Act - count all elements
+    //Act - count sum of all elements
     int cnt = 0;
-    for(const auto i : list)   // const iterator
-        ++cnt;
+    for(const auto& i : list)   // const iterator by reference
+        cnt += i;
 
-    //Assert - sum must be eq 3
+    //Assert - sum must zero
     assert(cnt == 0);
 }
 
@@ -365,7 +365,7 @@ void GivenEmptyList_WhenConstInteratorCalled_ThenCount0Elements()
 void GivenThreeInList_WhenConstInteratorCalled_ThenCount3Elements()
 {
     //Arrange
-    LinkedList<int> list = LinkedList<int>();
+    LinkedList<int> list;
     list.add(0);
     list.add(1);
     list.add(2);
@@ -391,6 +391,18 @@ void GivenThreeInList_WhenConstInteratorCalled_ThenCount3Elements()
     assert(sum == 6);
 }
 
+void GivenTwoInList_chk_exist()
+{
+    //Arrange
+    LinkedList<int> list;
+    assert(list.exist(0) == false);
+    list.add(0);
+    list.add(1);
+
+    assert(list.exist(0) == true);
+    assert(list.exist(1) == true);
+    assert(list.exist(2) == false);
+}
 
 int main()
 {
@@ -424,6 +436,7 @@ int main()
     GivenThreeNodesInList_WhenExistCalled_ReturnsVarious();
     GivenEmptyList_WhenConstInteratorCalled_ThenCount0Elements();
     GivenThreeInList_WhenConstInteratorCalled_ThenCount3Elements();
+    GivenTwoInList_chk_exist();
 
     std::cout<< "Tests pass"<< std::endl;
 }
