@@ -1,10 +1,14 @@
 # LinkedList
 
-This is a fork of [ivanseidel's LinkedList](https://github.com/ivanseidel/LinkedList/issues) lib.
-I needed some features for my projects but it looks like upstream is not suported much recently. So I decided to make some improvements and merge fixes on my owm. At least till [ivanseidel's](https://github.com/ivanseidel/LinkedList) PRs are pending.
+| [CHANGELOG](/CHANGELOG.md)__ |
+
+This is a fork of [ivanseidel](https://github.com/ivanseidel)'s [LinkedList](https://github.com/ivanseidel/LinkedList) lib.
+I needed some features for my projects but it looks like [upstream](https://github.com/ivanseidel/LinkedList) is not suported much recently. So I decided to make some improvements and merge fixes on my owm. At least till ivanseidel's [PR](https://github.com/ivanseidel/LinkedList/pulls)'s are pending.
 
 
 ### Changes compared to origin
+
+ - more optimization and improvement could be found in [CHANGELOG](CHANGELOG.md)
 
  - Lib could be build as an ESP-IDF component via provided CMakeLists.txt
 
@@ -14,7 +18,7 @@ I needed some features for my projects but it looks like upstream is not suporte
 
  - Cache node [improvement](https://github.com/ivanseidel/LinkedList/pull/56)
 
- - added head()/tail()/exist() helpers to make user code simple on Node access/checks
+ - added `head()`/`tail()`/`exist()` helpers to make user code simple on Node access/checks
 
  - added [wrapper namespace](https://github.com/ivanseidel/LinkedList/pull/51) to workaround Async Webserver Class name collision
 
@@ -130,11 +134,15 @@ myList.set(myList.size() - 1, myObject);
 ```
 
 #### Deleting elements
+*NOTE:* Deleting list nodes won't DELETE/FREE memory from Pointers, if you
+are storing Classes/Poiners in a list, manualy delete and free those before removing nodes.
+OR better to use `std::shared_pointer` or other smart structures.
+
 ```c++
 // remove(index) will remove and return the element at index
 
-// Remove the first object
-myList.remove(0);
+// Unlink/delete the first object
+myList.unlink(0);
 
 // Get and Delete the third element
 myDeletedObject = myList.remove(2);
@@ -146,8 +154,6 @@ myDeletedObject = myList.pop();
 myDeletedObject = myList.shift();
 
 // clear() will erase the entire list, leaving it with 0 elements
-// NOTE: Clear wont DELETE/FREE memory from Pointers, if you
-// are using Classes/Poiners, manualy delete and free those.
 myList.clear();
 ```
 
