@@ -9,9 +9,7 @@
 	Released into the public domain.
 */
 
-
-#ifndef LinkedList_h
-#define LinkedList_h
+#pragma once
 
 #include <stddef.h>
 #include <iterator>
@@ -57,6 +55,7 @@ protected:
 public:
 	LinkedList(){};
 	LinkedList(unsigned sizeIndex, T _t); //initiate list size and default value
+	LinkedList(const LinkedList<T> &rhs) : LinkedList(){ *this = rhs; };	// clone constructor
 	virtual ~LinkedList();
 
 	/*
@@ -151,6 +150,9 @@ public:
 	inline T& operator[](unsigned index);
 	inline T& operator[](size_t& i) { return this->get(i); }
   	inline const T& operator[](const size_t& i) const { return this->get(i); }
+
+	// deep-copy via assign operator
+	virtual LinkedList<T> & operator =(const LinkedList<T> &rhs);
 
 	/*
 		ConstIterator class
@@ -540,5 +542,17 @@ bool LinkedList<T>::exist(unsigned index) const {
 	return (index < _size);
 }
 
+template<typename T>
+LinkedList<T>& LinkedList<T>::operator =(const LinkedList<T>& rhs) {
+    clear();
+	LinkedList::ConstIterator i(rhs.root);
+	while (i != rhs.cend()){
+		add(*i);
+		++i;
+	}
 
-#endif
+	//for (const auto& i :  std::as_const(rhs))		// std::as_const req c++17
+	//	add(*i);
+
+    return *this;
+}

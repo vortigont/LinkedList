@@ -1,5 +1,6 @@
 ## Changelog
 
+ + provide LinkedList deep-copy via assign operator
  + some tests cleanup
  + test cases cover exist() method
  * optimized clear() method to use non-copy unlink()

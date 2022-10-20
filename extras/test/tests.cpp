@@ -404,6 +404,36 @@ void GivenTwoInList_chk_exist()
     assert(list.exist(2) == false);
 }
 
+/**
+ * @brief test deep-copy via assign operator or constructor
+ * 
+ */
+void GivenList_makeclone(){
+    //Arrange
+    LinkedList<int> list;
+    list.add(0);
+    list.add(1);
+    list.add(2);
+
+    // create a clone
+    LinkedList<int> clone(list);
+
+    assert(clone.size() == 3);      // size must be the same as origin
+    assert(clone.get(0) == 0);      // chk value
+    assert(clone.get(1) == 1);      // chk value
+    assert(clone[2] == 2);          // chk value
+    // change origin
+    list.set(0, 5);
+    list.set(1, 6);
+    list.pop();
+
+    // make another clone
+    clone = list;
+    assert(clone.size() == 2);      // size must be the same as origin
+    assert(clone.get(0) == 5);      // chk value
+    assert(clone[1] == 6);          // chk value
+}
+
 int main()
 {
     GivenNothingInList_WhenSizeCalled_Returns0();
@@ -437,6 +467,7 @@ int main()
     GivenEmptyList_WhenConstInteratorCalled_ThenCount0Elements();
     GivenThreeInList_WhenConstInteratorCalled_ThenCount3Elements();
     GivenTwoInList_chk_exist();
+    GivenList_makeclone();
 
     std::cout<< "Tests pass"<< std::endl;
 }

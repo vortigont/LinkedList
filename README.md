@@ -1,6 +1,6 @@
 # LinkedList
 
-| [CHANGELOG](/CHANGELOG.md)__ |
+__| [CHANGELOG](/CHANGELOG.md) |__
 
 This is a fork of [ivanseidel](https://github.com/ivanseidel)'s [LinkedList](https://github.com/ivanseidel/LinkedList) lib.
 I needed some features for my projects but it looks like [upstream](https://github.com/ivanseidel/LinkedList) is not suported much recently. So I decided to make some improvements and merge fixes on my owm. At least till ivanseidel's [PR](https://github.com/ivanseidel/LinkedList/pulls)'s are pending.
@@ -9,6 +9,8 @@ I needed some features for my projects but it looks like [upstream](https://gith
 ### Changes compared to origin
 
  - more optimization and improvement could be found in [CHANGELOG](CHANGELOG.md)
+
+ - provide LinkedList object deep-copy via assign operator
 
  - Lib could be build as an ESP-IDF component via provided CMakeLists.txt
 
