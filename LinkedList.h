@@ -93,6 +93,9 @@ public:
 
 	/*
 		Unlink and delete node at index;
+		NOTE: this will not destroy dyn alloced objects
+		like pointer to obj created with 'new'
+		use 'delete(remove())' instead or use smart pointers
 	*/
 	void unlink(unsigned index);
 
@@ -135,9 +138,14 @@ public:
 	*/
 	virtual bool exist(unsigned index) const;
 
-	/*
-		Clear the entire array
-	*/
+	/**
+	 * @brief clear linked list
+	 * effectively unlinks all nodes from a chain
+	 * NOTE: this will destruct linked nodes not considering stored objects
+	 * i.e. it's OK to clear nodes containing trivial objects like int, float, etc...
+	 * if node contains pointers to dynamically allocated objects created
+	 * with 'new' operator it will result in a mem leak!
+	 */
 	virtual void clear();
 
 	/*
