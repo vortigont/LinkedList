@@ -154,10 +154,8 @@ public:
 	virtual void sort(int (*cmp)(T &, T &));
 
 
-	// add support to array brakets [] operator
-	inline T& operator[](unsigned index);
-	inline T& operator[](size_t& i) { return this->get(i); }
-  	inline const T& operator[](const size_t& i) const { return this->get(i); }
+	inline T& operator[](unsigned i) { return getNode(i)->data; }
+	inline const T& operator[](const unsigned i) const { return getNode(i)->data; }
 
 	// deep-copy via assign operator
 	virtual LinkedList<T> & operator =(const LinkedList<T> &rhs);
@@ -330,12 +328,6 @@ bool LinkedList<T>::unshift(const T& _t){
 	lastNodeGot = root;
 	
 	return true;
-}
-
-
-template<typename T>
-T& LinkedList<T>::operator[](unsigned index) {
-	return getNode(index)->data;
 }
 
 template<typename T>
