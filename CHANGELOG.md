@@ -1,5 +1,6 @@
 ## Changelog
 
+## v1.5.0 - 2023.01.27
  + provide LinkedList deep-copy via assign operator
  + some tests cleanup
  + test cases cover `exist()` method
