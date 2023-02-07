@@ -473,6 +473,7 @@ void LinkedList<T>::sort(int (*cmp)(T &, T &)){
 			if(!a_end->next	) {
 				if(joinPoint == &root) {
 					last = a_end;
+					lastNodeGot = root;
 					lastIndexGot = 0;
 					return;
 				}
