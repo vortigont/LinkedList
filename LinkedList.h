@@ -118,19 +118,26 @@ public:
 	*/
 	virtual T get(unsigned index) const;
 
+
 	/*
 		Get first element of the list;
 		Return Element if accessible,
-		else, return false;
+		else, return T();
 	*/
-	virtual T head() const;
+	virtual T front() const;
 
 	/*
 		Get last element of the list;
 		Return Element if accessible,
-		else, return false;
+		else, return T();
 	*/
-	virtual T tail() const;
+	virtual T back() const;
+
+	// same as front()
+	T head() const { return front(); }
+
+	// same as back()
+	T tail() const { return back(); }
 
 	/*
 		Return true if element with specified index exist
@@ -529,12 +536,12 @@ ListNode<T>* LinkedList<T>::findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &
 }
 
 template<typename T>
-T LinkedList<T>::head() const {
+T LinkedList<T>::front() const {
 	return _size ? root->data : T();
 }
 
 template<typename T>
-T LinkedList<T>::tail() const {
+T LinkedList<T>::back() const {
 	return _size ? last->data : T();
 }
 
